@@ -1,0 +1,61 @@
+Regression Models Course Project
+================================
+
+Summary
+-------
+
+According to dataset mtcars we made analysis toanswer questions:
+
+* “Is an automatic or manual transmission better for MPG”
+* "Quantify the MPG difference between automatic and manual transmissions"
+
+and statistically cars with manual transmission has higher MPG that cars with automatic.
+In the second part of project we find the best combinations of variables ```mpg ~ wt + qsec +am```
+
+
+Automatic amd manual transmission
+---------------------------------
+
+Loading data:
+```{r}
+library(datasets)
+data(mtcars)
+```
+Boxplot illustrates relationship between manual and automatioc transmissions:
+```{r}
+boxplot(mpg~am, data=mtcars, ylab='MPG', xlab='Type of transmission' )
+```
+
+Mean of mechanical transmission higher than mean of automatical transmission. Create t-test to prove it.
+
+```{r}
+t.test(mpg~am, data=mtcars)
+```
+
+So we reject null-hypotesis and we know that type of transmission is important. Now we shoul create a model to describe it.
+
+
+First we create a basic regerssion model
+```{r}
+basic_model <- lm(mpg~am, data=mtcars)
+```
+Then create a "best" model
+
+```{r results='hide'}
+best_model <- step(lm(data=mtcars, mpg~.))
+```
+
+```{r}
+summary(best_model)
+```
+And compare both
+```{r}
+anova(basic_model, best_model)
+```
+
+Our "best model" is really better than general. Now we shouldcheckout normality of our residuals. So we can use q-q plot for this:
+
+```{r}
+par(mfrow=c(2,2))
+plot(best_model)
+```
